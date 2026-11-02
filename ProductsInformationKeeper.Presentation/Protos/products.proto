@@ -1,0 +1,73 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Presentation.Protos";
+
+import "google/protobuf/timestamp.proto";
+
+package products;
+
+service Products
+{
+    rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse);
+    rpc GetProductById (GetProductByIdRequest) returns (ProductMessage);
+    rpc GetProducts (GetProductsRequest) returns (GetProductsResponse);
+}
+
+enum ProductType
+{
+    PRODUCT_TYPE_GENERAL = 0;
+    PRODUCT_TYPE_HOUSEHOLD_CHEMICALS = 1;
+    PRODUCT_TYPE_APPLIANCES = 2;
+    PRODUCT_TYPE_FOOD = 3;
+}
+
+message ProductMessage
+{
+  string id = 1;
+  string name = 2;
+  float price = 3;
+  float weight = 4;
+    ProductType type = 5;
+    google.protobuf.Timestamp created_at = 6;
+    int32 warehouse_number = 7;
+}
+
+message CreateProductRequest
+{
+  string name = 1;
+  float price = 2;
+  float weight = 3;
+    ProductType type = 4;
+    int32 warehouse_number = 5;
+}
+
+message CreateProductResponse
+{
+  string id = 1;
+}
+
+message GetProductByIdRequest
+{
+  string id = 1;
+}
+
+message GetProductsRequest
+{
+    optional string id = 1;
+    optional string name = 2;
+    optional float price_from = 3;
+    optional float price_to = 4;
+    optional float weight_from = 5;
+    optional float weight_to = 6;
+    optional ProductType type = 7;
+    optional int32 warehouse_number = 8;
+    google.protobuf.Timestamp created_from = 9;
+    google.protobuf.Timestamp created_to = 10;
+    optional int32 page_number = 11;
+    optional int32 page_size = 12;
+}
+
+message GetProductsResponse
+{
+    repeated ProductMessage products = 1;
+}
