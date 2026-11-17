@@ -1,4 +1,5 @@
 ﻿using Application.Models;
+using Application.CustomExceptions;
 using Domain;
 using Infrastructure;
 using Application.Mappers;
@@ -19,6 +20,23 @@ namespace Application
             var domainProduct = ApplicationToDomainMapper.MapApplicationlToDomain(product);
             var record = MapDomainToStorage(domainProduct);
             return _storage.Add(record);
+        }
+
+        public void UpdateProduct(Guid productId, ApplicationProductModel product)
+        {
+            var domainProduct = ApplicationToDomainMapper.MapApplicationlToDomain(product);
+
+            domainProduct.ProductId = productId;
+
+            var record = MapDomainToStorage(domainProduct);
+
+            var isUpdated = _storage.Update(record);
+
+            if (!isUpdated)
+            {
+                throw new ProductNotFoundException(
+                    $"Товар с id: {productId} не найден");
+            }
         }
 
         public ApplicationProductModel GetById(Guid productId)

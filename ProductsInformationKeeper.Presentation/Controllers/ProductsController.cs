@@ -31,6 +31,16 @@ namespace Presentation.Controllers
             return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
+        [HttpPut("{id:guid}")]
+        public IActionResult Update(Guid id, [FromBody] ApplicationProductModel product)
+        {
+            _productValidator.ValidateAndThrow(product);
+
+            _productService.UpdateProduct(id, product);
+
+            return NoContent();
+        }
+
         [HttpGet("{id:guid}")]
         public IActionResult GetById(Guid id)
         {

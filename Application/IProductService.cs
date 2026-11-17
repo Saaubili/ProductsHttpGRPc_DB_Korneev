@@ -5,6 +5,7 @@ namespace Application
     public interface IProductService
     {
         Guid CreateProduct(ApplicationProductModel product);
+        void UpdateProduct(Guid productId, ApplicationProductModel product);
         ApplicationProductModel GetById(Guid productId);
         List<ApplicationProductModel> GetFilteredProducts(Guid? id,
                                                       string? productName,

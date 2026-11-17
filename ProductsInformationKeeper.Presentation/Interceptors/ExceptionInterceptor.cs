@@ -1,8 +1,7 @@
-﻿using Application;
+﻿using Application.CustomExceptions;
 using FluentValidation;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
-using Microsoft.AspNetCore.Http;
 
 namespace Presentation.Interceptors
 {

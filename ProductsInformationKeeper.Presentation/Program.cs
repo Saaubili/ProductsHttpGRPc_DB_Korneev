@@ -1,11 +1,12 @@
 using Application;
 using FluentValidation;
-using Presentation.Controllers;
 using Presentation.Interceptors;
 using Presentation.Middleware;
 using Presentation.Services;
 using Presentation.Validators;
 using System.Text.Json.Serialization;
+using Application.CustomExceptions;
+using FluentMigrator.Runner;
 
 namespace Presentation
 {
@@ -15,7 +16,10 @@ namespace Presentation
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddApplication();
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                ?? throw new ConnectionStringNotFoundException("Строка подключения не найдена");
+
+            builder.Services.AddApplication(connectionString);
             builder.Services.AddValidatorsFromAssemblyContaining<ProductsRequestValidator>();
 
             builder.Services.AddControllers().AddJsonOptions(options =>
@@ -33,6 +37,12 @@ namespace Presentation
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var migrationRunner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
+                migrationRunner.MigrateUp();
+            }
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 

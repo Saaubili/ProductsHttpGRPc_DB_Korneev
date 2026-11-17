@@ -1,4 +1,4 @@
-﻿using Application;
+﻿using Application.CustomExceptions;
 using FluentValidation;
 
 namespace Presentation.Middleware
